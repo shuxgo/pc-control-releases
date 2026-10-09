@@ -30,4 +30,4 @@ jobs:
             --repo shuxgo/pc-control-releases \
             --target "$GITHUB_SHA" \
             --title "PC Control ${version}" \
-            --notes "Windows executable built from private PC Control source. Both computers need Cloudflare One Client and the same Mesh organization for ID pairing."
+            --notes "Windows executable built from private PC Control source. Both computers only need to run PC Control with internet access; Cloudflare One Client and port forwarding are not required for ID pairing. Incoming pairing and remote screen sessions require confirmation."
