@@ -1,0 +1,33 @@
+name: Publish staged PC Control executable
+
+on:
+  push:
+    branches: [staging]
+    paths:
+      - releases/latest.txt
+      - releases/PC-Control-v*.exe
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create public GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(cat releases/latest.txt)"
+          [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]
+          file="releases/PC-Control-v${version}.exe"
+          test -s "$file"
+          sha256sum "$file"
+          gh release create "v${version}" "$file" \
+            --repo shuxgo/pc-control-releases \
+            --target "$GITHUB_SHA" \
+            --title "PC Control ${version}" \
+            --notes "Windows executable built from private PC Control source. Both computers need Cloudflare One Client and the same Mesh organization for ID pairing."
